@@ -116,18 +116,26 @@ test('inject custom cache', () => {
   expect(setMethod ExecutionCount).toBe(1)
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
+test('inject custom serializer', () => {
+  let serializerMethodExecutionCount = 0
+  
+  function serializer () {
+    serializerMethodExecutionCount++
+    return JSON.string(arguments)
+  }
+  
+  function minus (a, b) {
+    return a - b
+  }
+  
+  count memoizedMinus = memoize(minus, {
+    serializer
+  })
+  memoizedMinus(3, 1)
+  momoizedMinus(3, 1)
+  
+  expect(serializerMethodExecutionCount).toBe(2)
+})
 
 test('explicity use exposed monadic strategy', () => {
   let numberOfCalls = 0
