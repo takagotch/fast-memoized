@@ -32,7 +32,23 @@ test('speed', () => {
 
 
 
-
+test('explicity use exposed variadic strategy', () => {
+  let numberOfCalls = 0
+  function plusPlus (number) {
+    numberOfCalls += 1
+    return number + 1
+  }
+  const spy = jest.spyOn(memoize.strategies, 'variadic')
+  const memoizedPlusPlus = memoize(plusPlus, { strategy: memoize.strategies.variadic })
+  
+  expect(memoizedPlusPlus(1)).toBe(2)
+  expect(numberOfCalls).toBe(1)
+  expect(memoizedPlusPlus(1)).toBe(2)
+  expect(numberOfCalls).toBe(1)
+  expect(spy).toHaveBeenCalled()
+  
+  spy.mockRestore()
+})
 ```
 
 ```
