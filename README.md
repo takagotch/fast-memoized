@@ -30,6 +30,23 @@ test('speed', () => {
   expect(memoizedExecTime < vanillaExecTime).toBe(true)
 })
 
+test('memoize functions with single primitive argument', () => {
+  function plusPlus (number) {
+    return number + 1
+  }
+  
+  const memoizedPlusPlus = memoize(plusPlus)
+  
+  expect(memoizePlusPlus(1)).toBe(2)
+  expect(memoizePlusPlus(1)).toBe(2)
+})
+
+
+
+
+
+
+
 
 
 
