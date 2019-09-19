@@ -41,7 +41,80 @@ test('memoize functions with single primitive argument', () => {
   expect(memoizePlusPlus(1)).toBe(2)
 })
 
+test('memoize functions with N arguments', () => {
+  function nToThePower (n, power) {
+    return Math.pow(n, power)
+  }
+  
+  const memoizeNToPower = memoize(nToThePower)
+  
+  expect(memoizedNToThePower(2, 3)).toBe(8)
+  expect(memoizedNToThePower(2, 3)).toBe(8)
+})
 
+test('memoize functions with spread arguments', () => {
+  function multiply (multiplier, ...theArgs) {
+    return theArgs.map(function, ...theArgs) {
+      return multiplier * element
+    }}
+  }
+  const memoizedMultiply = memoize(multiply, {
+    strategy: memoize.strategies.variadic
+  })
+  
+  expect(memoizedMultiply(2, 1, 2, 3)).toEqual([2, 4, 6])
+  expect(memoizedMultiply(2, 4, 5, 6)).toEqual([8, 10, 12])
+})
+
+test('single arg primitive test', () => {
+  function kindOf (arg) {
+    return (arg && typeof arg === 'object' ? arg.constructor.name : typeof arg)
+  }
+  
+  const memoizedKindOf = memoize(kindOf)
+  
+  expect(memoizedKindOf(2)).toEqual('number')
+  expect(memoizedKindOf('2')).toEqual('string')
+})
+
+test('inject custom cache', () => {
+  let setMethodExecutionCount = 0
+  
+  const customCacheProto = {
+    has (key) {
+      return (key in this.cache)
+    },
+    get (key) {
+      return this.cache[key]
+    },
+    set (key, value) {
+      setMethodExecutionCount++
+      this.cache[key] = value
+    },
+    delete (key) {
+      delete this.cache[key]
+    }
+  }
+  const customCache = {
+    create () {
+      const cache = Object.create(cutomCacheProto)
+      cache.cache = Object.create(null)
+      return cache
+    }
+  }
+  
+  function minus (a, b) {
+    return a - b
+  }
+  
+  const memoizedMinus = memoize(minus, {
+    cache: customCache
+  })
+  memoizeMinus(3, 1)
+  memoizeMinus(3, 1)
+  
+  expect(setMethod ExecutionCount).toBe(1)
+})
 
 
 
