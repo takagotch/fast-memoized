@@ -32,6 +32,31 @@ test('speed', () => {
 
 
 
+
+
+
+
+
+
+
+test('explicity use exposed monadic strategy', () => {
+  let numberOfCalls = 0
+  function plusPlug (number) {
+    numberOfCalls += 1
+    return number + 1
+  }
+  const spy = jest.spyOn(memoize.strategies, 'monadic')
+  const memoizedPlusPlus = memoize(plusPlus, { strategy: memoize.strategies.monadic })
+  
+  expect(memoizedPlusPlus(1)).toBe(2)
+  expect(numberOfCalls).toBe(1)
+  expect(memoizedPlusPlus(1)).toBe(2)
+  expect(numberOfCalls).toBe(1)
+  expect(spy).toHaveBeenCalled()
+  
+  spy.mockRestore()
+})
+
 test('explicity use exposed variadic strategy', () => {
   let numberOfCalls = 0
   function plusPlus (number) {
